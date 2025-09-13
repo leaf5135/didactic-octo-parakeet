@@ -1,0 +1,37 @@
+<%= form_with(model: permission,
+              html: { "tool-name" => permission.new_record? ? "create-permission" : "update-permission-#{permission.id}",
+                      "tool-description" => permission.new_record? ? "Create a new permission" : "Update permission #{permission.resource}:#{permission.action}" }) do |form| %>
+  <% if permission.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(permission.errors.count, "error") %> prohibited this permission from being saved:</h2>
+
+      <ul>
+        <% permission.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :resource, style: "display: block" %>
+    <%= form.text_field :resource,
+        "tool-param-description" => "Resource name (e.g., users, roles)" %>
+  </div>
+
+  <div>
+    <%= form.label :action, style: "display: block" %>
+    <%= form.text_field :action,
+        "tool-param-description" => "Action type (e.g., create, read, update, destroy)" %>
+  </div>
+
+  <div>
+    <%= form.label :description, style: "display: block" %>
+    <%= form.textarea :description,
+        "tool-param-description" => "Permission description" %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

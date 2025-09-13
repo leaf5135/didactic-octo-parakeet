@@ -1,0 +1,104 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# Admin has all permissions
+admin_users_index:
+  role: admin
+  permission: users_index
+
+admin_users_show:
+  role: admin
+  permission: users_show
+
+admin_users_create:
+  role: admin
+  permission: users_create
+
+admin_users_update:
+  role: admin
+  permission: users_update
+
+admin_users_destroy:
+  role: admin
+  permission: users_destroy
+
+admin_roles_index:
+  role: admin
+  permission: roles_index
+
+admin_roles_show:
+  role: admin
+  permission: roles_show
+
+admin_roles_create:
+  role: admin
+  permission: roles_create
+
+admin_roles_update:
+  role: admin
+  permission: roles_update
+
+admin_roles_destroy:
+  role: admin
+  permission: roles_destroy
+
+admin_permissions_index:
+  role: admin
+  permission: permissions_index
+
+admin_permissions_show:
+  role: admin
+  permission: permissions_show
+
+admin_dashboard_index:
+  role: admin
+  permission: dashboard_index
+
+# Manager has limited permissions
+manager_users_index:
+  role: manager
+  permission: users_index
+
+manager_users_show:
+  role: manager
+  permission: users_show
+
+manager_users_create:
+  role: manager
+  permission: users_create
+
+manager_users_update:
+  role: manager
+  permission: users_update
+
+manager_dashboard_index:
+  role: manager
+  permission: dashboard_index
+
+# Viewer has only read permissions
+viewer_users_index:
+  role: viewer
+  permission: users_index
+
+viewer_users_show:
+  role: viewer
+  permission: users_show
+
+viewer_roles_index:
+  role: viewer
+  permission: roles_index
+
+viewer_roles_show:
+  role: viewer
+  permission: roles_show
+
+viewer_permissions_index:
+  role: viewer
+  permission: permissions_index
+
+viewer_permissions_show:
+  role: viewer
+  permission: permissions_show
+
+viewer_dashboard_index:
+  role: viewer
+  permission: dashboard_index
