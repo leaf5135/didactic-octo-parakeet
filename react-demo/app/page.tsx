@@ -1,21 +1,9 @@
 import React from 'react';
-import { mcp } from 'react-mcp-attributes';
-
-interface Todo {
-  id: number;
-  text: string;
-  completed: boolean;
-}
-
-// Mock server-side data (in real app, this would come from database)
-const initialTodos: Todo[] = [
-  { id: 1, text: 'Learn about WebMCP', completed: false },
-  { id: 2, text: 'Build a React app', completed: true },
-  { id: 3, text: 'Test SSR with MCP attributes', completed: false }
-];
+import { mcp } from 'webmcp-attributes';
+import { getTodos, type Todo } from '../lib/todos';
 
 export default function TodoApp() {
-  const todos = initialTodos;
+  const todos = getTodos();
   const activeTodos = todos.filter(t => !t.completed);
   const completedTodos = todos.filter(t => t.completed);
 
@@ -47,11 +35,7 @@ export default function TodoApp() {
             marginRight: '10px',
             minWidth: '300px'
           }}
-          {...mcp.param('The text content for the new todo item', {
-            type: 'string',
-            required: true,
-            min: 1
-          })}
+          {...mcp.param('The text content for the new todo item', {max: 100, min: 1, type: 'string', required: true})}
         />
         <button 
           type="submit"
