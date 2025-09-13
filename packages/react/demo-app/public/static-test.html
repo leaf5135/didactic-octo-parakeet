@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Static HTML Test - WebMCP Attributes</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
+        form { margin-bottom: 20px; }
+        input[type="text"] { padding: 10px; font-size: 16px; border-radius: 4px; border: 1px solid #ddd; margin-right: 10px; min-width: 300px; }
+        button { padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .filters { margin-bottom: 20px; }
+        .filters a { margin-right: 10px; text-decoration: none; color: #666; }
+        .filters a.active { color: #007bff; font-weight: bold; }
+        ul { list-style: none; padding: 0; }
+        li { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
+        .todo-text { flex: 1; margin: 0 10px; }
+        .completed { text-decoration: line-through; color: #999; }
+        .toggle-btn { background: none; border: none; font-size: 18px; cursor: pointer; margin-right: 10px; }
+        .delete-btn { background: none; border: none; color: #dc3545; text-decoration: underline; cursor: pointer; }
+        .info { margin-top: 40px; padding: 20px; background-color: #f8f9fa; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Static HTML Test - WebMCP Attributes</h1>
+        <p style="color: #666; margin-bottom: 20px;">
+            This is a static HTML file with MCP attributes. No React, no hydration.
+        </p>
+        
+        <!-- Add Todo Form with MCP attributes -->
+        <form 
+            action="/api/todos"
+            method="POST"
+            tool-name="add-todo"
+            tool-description="Add a new todo item to the list"
+        >
+            <input
+                name="text"
+                type="text"
+                placeholder="What needs to be done?"
+                required
+                tool-param-description="The text content for the new todo item"
+            />
+            <button type="submit">Add Todo</button>
+        </form>
+
+        <!-- Filter Links with MCP attributes -->
+        <div class="filters">
+            <a 
+                href="/todos/all"
+                class="active"
+                tool-name="show-all-todos"
+                tool-description="Show all todos regardless of completion status"
+            >
+                All (3)
+            </a>
+            <a 
+                href="/todos/active"
+                tool-name="show-active-todos"
+                tool-description="Show only incomplete todos"
+            >
+                Active (2)
+            </a>
+            <a 
+                href="/todos/completed"
+                tool-name="show-completed-todos"
+                tool-description="Show only completed todos"
+            >
+                Completed (1)
+            </a>
+        </div>
+
+        <!-- Todo List -->
+        <ul>
+            <li>
+                <!-- Toggle Todo Form -->
+                <form 
+                    action="/api/todos/toggle"
+                    method="POST"
+                    style="display: inline;"
+                    tool-name="toggle-todo"
+                    tool-description="Toggle completion status of a todo item"
+                >
+                    <input 
+                        type="hidden" 
+                        name="id" 
+                        value="1"
+                        tool-param-description="ID of the todo to toggle"
+                    />
+                    <button type="submit" class="toggle-btn">○</button>
+                </form>
+
+                <span class="todo-text">Learn about WebMCP</span>
+
+                <!-- Delete Todo Form -->
+                <form 
+                    action="/api/todos/delete"
+                    method="POST"
+                    style="display: inline;"
+                    tool-name="delete-todo"
+                    tool-description="Delete a specific todo item"
+                >
+                    <input 
+                        type="hidden" 
+                        name="id" 
+                        value="1"
+                        tool-param-description="ID of the todo to delete"
+                    />
+                    <button type="submit" class="delete-btn">Delete</button>
+                </form>
+            </li>
+            
+            <li>
+                <form 
+                    action="/api/todos/toggle"
+                    method="POST"
+                    style="display: inline;"
+                    tool-name="toggle-todo"
+                    tool-description="Toggle completion status of a todo item"
+                >
+                    <input 
+                        type="hidden" 
+                        name="id" 
+                        value="2"
+                        tool-param-description="ID of the todo to toggle"
+                    />
+                    <button type="submit" class="toggle-btn">✓</button>
+                </form>
+
+                <span class="todo-text completed">Build a React app</span>
+
+                <form 
+                    action="/api/todos/delete"
+                    method="POST"
+                    style="display: inline;"
+                    tool-name="delete-todo"
+                    tool-description="Delete a specific todo item"
+                >
+                    <input 
+                        type="hidden" 
+                        name="id" 
+                        value="2"
+                        tool-param-description="ID of the todo to delete"
+                    />
+                    <button type="submit" class="delete-btn">Delete</button>
+                </form>
+            </li>
+            
+            <li>
+                <form 
+                    action="/api/todos/toggle"
+                    method="POST"
+                    style="display: inline;"
+                    tool-name="toggle-todo"
+                    tool-description="Toggle completion status of a todo item"
+                >
+                    <input 
+                        type="hidden" 
+                        name="id" 
+                        value="3"
+                        tool-param-description="ID of the todo to toggle"
+                    />
+                    <button type="submit" class="toggle-btn">○</button>
+                </form>
+
+                <span class="todo-text">Test SSR with MCP attributes</span>
+
+                <form 
+                    action="/api/todos/delete"
+                    method="POST"
+                    style="display: inline;"
+                    tool-name="delete-todo"
+                    tool-description="Delete a specific todo item"
+                >
+                    <input 
+                        type="hidden" 
+                        name="id" 
+                        value="3"
+                        tool-param-description="ID of the todo to delete"
+                    />
+                    <button type="submit" class="delete-btn">Delete</button>
+                </form>
+            </li>
+        </ul>
+
+        <!-- Clear Completed Form -->
+        <div style="margin-top: 20px;">
+            <form 
+                action="/api/todos/clear-completed"
+                method="POST"
+                style="display: inline;"
+                tool-name="clear-completed"
+                tool-description="Remove all completed todos from the list"
+            >
+                <button type="submit" class="delete-btn">Clear Completed (1)</button>
+            </form>
+        </div>
+
+        <!-- Static Info -->
+        <div class="info">
+            <h3>Static HTML Test Info</h3>
+            <p><strong>File:</strong> static-test.html</p>
+            <p><strong>Framework:</strong> None (Pure HTML)</p>
+            <p><strong>MCP Attributes:</strong> Should be immediately visible</p>
+            <p><strong>Test:</strong> Check if WebMCP extension detects tools</p>
+        </div>
+    </div>
+
+    <script>
+        // Optional: Add some basic interaction without changing the DOM structure
+        console.log('Static HTML loaded. Checking for MCP attributes...');
+        
+        const elementsWithToolName = document.querySelectorAll('[tool-name]');
+        const elementsWithParamDesc = document.querySelectorAll('[tool-param-description]');
+        
+        console.log(`Found ${elementsWithToolName.length} elements with tool-name`);
+        console.log(`Found ${elementsWithParamDesc.length} elements with tool-param-description`);
+        
+        elementsWithToolName.forEach(el => {
+            console.log(`Tool: ${el.getAttribute('tool-name')} - ${el.getAttribute('tool-description')}`);
+        });
+    </script>
+</body>
+</html>
