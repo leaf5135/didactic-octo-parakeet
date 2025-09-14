@@ -8,6 +8,7 @@ import {
   Authenticated,
   Unauthenticated,
 } from 'convex/react';
+import { useConvexAuth } from 'convex/react';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import Link from 'next/link';
 import { mcp } from 'webmcp-attributes';
@@ -16,6 +17,8 @@ type Filter = 'all' | 'active' | 'completed';
 
 export default function Home() {
   const { user, signOut } = useAuth();
+  const { isLoading, isAuthenticated } = useConvexAuth();
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <main className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center px-4 py-10">
@@ -23,7 +26,7 @@ export default function Home() {
         <div className="flex flex-col items-center mb-6 space-y-4">
           <h1 className="text-3xl font-semibold text-white">Todo</h1>
           <div className="flex gap-4">
-            {user ? (
+            {user && isAuthenticated ? (
               <button
                 onClick={() => signOut()}
                 className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition"
