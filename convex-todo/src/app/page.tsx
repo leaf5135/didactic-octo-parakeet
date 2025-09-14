@@ -11,6 +11,7 @@ import {
 import Link from 'next/link';
 import { useState } from 'react';
 import { api } from '../../convex/_generated/api';
+import { Id } from '../../convex/_generated/dataModel';
 
 type Filter = 'all' | 'active' | 'completed';
 
@@ -111,7 +112,7 @@ function TodoApp() {
     const formData = new FormData(form);
     const id = formData.get('id') as string;
     if (!todoExists(id)) return;
-    await toggleTodo({ id });
+    await toggleTodo({ id: id as Id<"todos"> });
     form.reset();
   };
 
@@ -121,7 +122,7 @@ function TodoApp() {
     const formData = new FormData(form);
     const id = formData.get('id') as string;
     if (!todoExists(id)) return;
-    await deleteTodo({ id });
+    await deleteTodo({ id: id as Id<"todos"> });
     form.reset();
   };
 
