@@ -18,7 +18,16 @@ type Filter = 'all' | 'active' | 'completed';
 export default function Home() {
   const { user, signOut } = useAuth();
   const { isLoading, isAuthenticated } = useConvexAuth();
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) {
+  return (
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-white text-lg font-medium">Loading...</p>
+      </div>
+    </div>
+  );
+}
 
   return (
     <main className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center px-4 py-10">
