@@ -35,6 +35,8 @@ test:
 # You may also set the Litesupport.root in production via the
 # `LITESTACK_DATA_PATH` environment variable.
 production:
-  <<: *default
-  database: <%= Litesupport.root("production").join("data.sqlite3") %>
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  url: <%= ENV["DATABASE_URL"] %>
 
