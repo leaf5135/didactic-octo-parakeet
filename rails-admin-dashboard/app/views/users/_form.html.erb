@@ -1,6 +1,6 @@
 <%= form_with(model: user, class: "space-y-6",
               html: { "tool-name" => user.new_record? ? "create-user" : "update-user-#{user.id}",
-                      "tool-description" => user.new_record? ? "Create a new user" : "Update user #{user.full_name}" }) do |form| %>
+                      "tool-description" => user.new_record? ? "Create a new user account. Redirects to user profile page on success." : "Update user #{user.full_name}. Redirects to updated user profile." }) do |form| %>
   <% if user.errors.any? %>
     <div class="rounded-lg border border-red-200 bg-red-50 p-4">
       <div class="flex">
@@ -31,7 +31,10 @@
       <div class="mt-1">
         <%= form.text_field :first_name,
             class: "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-            "tool-param-description" => "User's first name" %>
+            "tool-param-description" => "User's first name",
+            "tool-param-type" => "string",
+            "tool-param-min" => "1",
+            "tool-param-max" => "50" %>
       </div>
     </div>
 
@@ -40,7 +43,10 @@
       <div class="mt-1">
         <%= form.text_field :last_name,
             class: "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-            "tool-param-description" => "User's last name" %>
+            "tool-param-description" => "User's last name",
+            "tool-param-type" => "string",
+            "tool-param-min" => "1",
+            "tool-param-max" => "50" %>
       </div>
     </div>
 
@@ -49,7 +55,9 @@
       <div class="mt-1">
         <%= form.email_field :email,
             class: "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-            "tool-param-description" => "User's email address" %>
+            required: true,
+            "tool-param-description" => "User's email address",
+            "tool-param-format" => "email" %>
       </div>
     </div>
 
@@ -59,7 +67,10 @@
         <div class="mt-1">
           <%= form.password_field :password,
               class: "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-              "tool-param-description" => "User's password" %>
+              required: true,
+              "tool-param-description" => "User's password",
+              "tool-param-type" => "string",
+              "tool-param-min" => "8" %>
         </div>
       </div>
 
@@ -68,7 +79,10 @@
         <div class="mt-1">
           <%= form.password_field :password_confirmation,
               class: "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-              "tool-param-description" => "Password confirmation" %>
+              required: true,
+              "tool-param-description" => "Confirm the password (must match)",
+              "tool-param-type" => "string",
+              "tool-param-min" => "8" %>
         </div>
       </div>
     <% end %>
@@ -80,7 +94,8 @@
             <div class="flex items-center h-5">
               <%= form.check_box :active,
                   class: "h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary",
-                  "tool-param-description" => "Set user account status (boolean: true = active, can sign in; false = inactive)" %>
+                  "tool-param-description" => "Set user account status - active users can sign in",
+                  "tool-param-type" => "boolean" %>
             </div>
             <div class="ml-3 text-sm">
               <%= form.label :active, "Active", class: "font-medium" %>

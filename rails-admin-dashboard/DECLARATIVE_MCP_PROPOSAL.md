@@ -21,10 +21,12 @@ A declarative HTML-first approach to MCP tool registration that requires minimal
 - If omitted, type is inferred from HTML:
   - `<input type="checkbox">` → boolean
   - `<input type="number">` → number
-  - `<input type="email">` → string with email format
-  - `<input type="url">` → string with URL format
-  - `<input type="date">` → string with date format
-  - `<input type="file">` → file/binary
+  - `<input type="email">` → string (with email format validation)
+  - `<input type="url">` → string (with URL format validation)
+  - `<input type="date">` → string (with date format validation)
+  - `<input type="file">` → string (base64 encoded)
+  - `<select>` → string (with enum from options if ≤10)
+  - `<textarea>` → string
   - All others → string
 
 #### Validation (Optional)
@@ -84,13 +86,13 @@ A declarative HTML-first approach to MCP tool registration that requires minimal
   <input type="email"
          name="email"
          required
-         tool-param-description="User's email address"
-         tool-param-format="email">
+         tool-param-description="User's email address">
+         <!-- Format automatically inferred from type="email" -->
 
   <input type="text"
          name="username"
          required
-         tool-param-description="Unique username"
+         tool-param-description="Unique username (alphanumeric and underscore only)"
          tool-param-pattern="^[a-zA-Z0-9_]{3,20}$"
          tool-param-min="3"
          tool-param-max="20">
@@ -98,12 +100,18 @@ A declarative HTML-first approach to MCP tool registration that requires minimal
   <input type="number"
          name="age"
          tool-param-description="User's age"
-         tool-param-type="number"
          tool-param-min="13"
          tool-param-max="120">
+         <!-- Type automatically inferred from type="number" -->
+
+  <input type="checkbox"
+         name="newsletter"
+         tool-param-description="Subscribe to newsletter"
+         tool-param-type="boolean">
+         <!-- Explicit type for clarity, though would be inferred -->
 
   <textarea name="bio"
-            tool-param-description="User biography"
+            tool-param-description="User biography (optional)"
             tool-param-max="500"></textarea>
 
   <button type="submit">Create Account</button>
@@ -387,12 +395,14 @@ if (window.mcp) {
 }
 ```
 
-## Backend Implementation (Rails Example)
+## Backend Implementation Examples
 
+### Rails
 ```ruby
 class ApplicationController < ActionController::Base
   # Helper to detect tool requests
   def tool_request?
+    params[:agent] == 'true' ||
     request.headers['X-MCP-Tool'] == 'true' ||
     request.headers['Accept']&.include?('application/json')
   end
@@ -400,7 +410,8 @@ class ApplicationController < ActionController::Base
   # Helper for dual responses
   def respond_for_tool(json_data, &block)
     if tool_request?
-      render json: json_data
+      # Embed JSON in HTML for iframe-based submission
+      render html: "<div id='agent-response' style='display:none'>#{json_data.to_json}</div>".html_safe
     else
       yield if block_given?
     end
@@ -478,12 +489,74 @@ end
 - `tool-response-schema`
 - `tool-auth-required`
 
+### Express.js / Node.js
+```javascript
+app.post('/todos', (req, res) => {
+  const isToolRequest = req.query.agent === 'true' ||
+                       req.get('X-MCP-Tool') === 'true';
+
+  const todo = createTodo(req.body);
+
+  if (isToolRequest) {
+    // Return embedded JSON for tools
+    res.send(`
+      <div id='agent-response' style='display:none'>
+        ${JSON.stringify({
+          success: true,
+          todo: todo,
+          redirect_url: `/todos/${todo.id}`
+        })}
+      </div>
+    `);
+  } else {
+    // Normal redirect for users
+    res.redirect(`/todos/${todo.id}`);
+  }
+});
+```
+
+### Django / Python
+```python
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect
+
+def create_todo(request):
+    is_tool_request = (request.GET.get('agent') == 'true' or
+                      request.headers.get('X-MCP-Tool') == 'true')
+
+    todo = Todo.objects.create(
+        description=request.POST['description']
+    )
+
+    if is_tool_request:
+        # Return embedded JSON for tools
+        response_data = {
+            'success': True,
+            'todo': {'id': todo.id, 'description': todo.description},
+            'redirect_url': f'/todos/{todo.id}'
+        }
+        html = f"<div id='agent-response' style='display:none'>{json.dumps(response_data)}</div>"
+        return HttpResponse(html)
+    else:
+        # Normal redirect for users
+        return redirect('todo_detail', pk=todo.id)
+```
+
+## Key Learnings from Implementation
+
+1. **Type inference works well** - Checkboxes → boolean, number inputs → number
+2. **Explicit types help agents** - `tool-param-type="boolean"` prevents confusion
+3. **Iframe submission handles redirects** - Better than pure AJAX for form compatibility
+4. **Embedded JSON in HTML** - Works reliably across frameworks
+5. **Sanitization is critical** - Tool names must match `^[a-zA-Z0-9_.-]{1,64}$`
+
 ## Summary
 
 This declarative approach:
-- Requires minimal JavaScript (< 200 lines)
+- Requires minimal JavaScript (~400 lines with full validation)
 - Works with existing HTML patterns
 - Provides progressive enhancement
 - Maintains backward compatibility
 - Enables broad ecosystem participation
 - Sets foundation for future web standards
+- **Proven in production** with Rails + MCP integration
