@@ -29,7 +29,7 @@ export default function Home() {
         {/* Spinner */}
         <div className="flex flex-col items-center space-y-4 z-10">
           <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-white text-lg font-medium">Loading your todos...</p>
+          <p className="text-white text-lg font-medium">Loading...</p>
         </div>
       </div>
     );
@@ -92,14 +92,15 @@ function TodoApp() {
 
   const [filter, setFilter] = useState<Filter>('all');
 
+  const todoExists = (id: string) => todos.some((todo) => todo._id === id);
+
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const text = formData.get('text') as string;
-    const trimmed = text.trim();
-    if (!trimmed) return;
-    await createTodo({ text: trimmed });
+    if (!text.trim()) return;
+    await createTodo({ text: text.trim() });
     form.reset();
   };
 
@@ -107,16 +108,20 @@ function TodoApp() {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
-    const id = formData.get('id') as any;
+    const id = formData.get('id') as string;
+    if (!todoExists(id)) return;
     await toggleTodo({ id });
+    form.reset();
   };
 
   const handleDelete = async (e: React.FormEvent) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
-    const id = formData.get('id') as any;
+    const id = formData.get('id') as string;
+    if (!todoExists(id)) return;
     await deleteTodo({ id });
+    form.reset();
   };
 
   const filteredTodos = todos.filter((todo) => {
@@ -127,36 +132,79 @@ function TodoApp() {
 
   return (
     <>
+      {/* MCP-Compatible Add Todo Form */}
       <form
+        tool-name="todo.create"
+        tool-description="Create a new Todo item"
         onSubmit={handleAdd}
         className="flex gap-2 mb-6"
-        tool-name="add-todo"
-        tool-description="Add a new todo item to the list"
       >
         <input
           name="text"
           type="text"
-          className="flex-1 border border-gray-600 bg-gray-800 text-white placeholder-gray-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-white transition"
           placeholder="Add a new task"
+          tool-param-type="string"
+          tool-param-description="Text of the new todo"
           required
-          tool-param-description="The text content for the new todo item"
-          tool-param-min="1"
-          tool-param-max="100"
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
-              const form = e.currentTarget.form;
-              if (form) form.reset();
-            }
-          }}
+          className="flex-1 border border-gray-600 bg-gray-800 text-white placeholder-gray-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-white transition"
         />
         <button
           type="submit"
-          className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 hover:shadow-[0_0_10px_rgba(255,255,255,0.3)] transition"
+          className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition"
         >
           Add
         </button>
       </form>
 
+      {/* MCP-Compatible Toggle Todo Form */}
+      <form
+        tool-name="todo.toggle"
+        tool-description="Toggle a Todo by ID"
+        onSubmit={handleToggle}
+        className="flex gap-2 mb-4"
+      >
+        <input
+          name="id"
+          type="text"
+          placeholder="Enter todo ID to toggle"
+          tool-param-type="string"
+          tool-param-description="ID of the todo to toggle"
+          required
+          className="flex-1 border border-gray-600 bg-gray-800 text-white placeholder-gray-400 rounded px-3 py-2"
+        />
+        <button
+          type="submit"
+          className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition"
+        >
+          Toggle
+        </button>
+      </form>
+
+      {/* MCP-Compatible Delete Todo Form */}
+      <form
+        tool-name="todo.delete"
+        tool-description="Delete a Todo by ID"
+        onSubmit={handleDelete}
+        className="flex gap-2 mb-6"
+      >
+        <input
+          name="id"
+          type="text"
+          placeholder="Enter todo ID to delete"
+          tool-param-type="string"
+          tool-param-description="ID of the todo to delete"
+          required
+          className="flex-1 border border-gray-600 bg-gray-800 text-white placeholder-gray-400 rounded px-3 py-2"
+        />
+        <button
+          type="submit"
+          className="px-4 py-2 bg-red-700 text-white rounded hover:bg-red-600 transition"
+        >
+          Delete
+        </button>
+      </form>
+
+      {/* Filter Buttons */}
       <div className="flex justify-center gap-4 mb-6 text-sm text-gray-400">
         {(['all', 'active', 'completed'] as Filter[]).map((f) => (
           <button
@@ -175,6 +223,7 @@ function TodoApp() {
         ))}
       </div>
 
+      {/* Todo List */}
       <ul className="space-y-2">
         {filteredTodos.map((todo) => (
           <li
@@ -207,6 +256,9 @@ function TodoApp() {
                 >
                   {todo.text}
                 </span>
+                <span className="text-xs text-gray-500 mt-1">
+                  ID: {todo._id}
+                </span>
               </button>
             </form>
 
@@ -216,7 +268,7 @@ function TodoApp() {
               tool-name={`delete-todo-${todo._id}`}
               tool-description={`Delete todo: ${todo.text}`}
             >
-              <input type="hidden" name="id" value={todo._id} tool-param-description="The ID of the todo item to delete" />
+              <input type="hidden" name="id" value={todo._id} />
               <button
                 type="submit"
                 className="text-gray-400 hover:text-red-500 transition"
