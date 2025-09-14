@@ -26,7 +26,9 @@
       </div>
     <% end %>
 
-    <%= form_with(scope: :session, url: login_path, local: true, id: "login-form", class: "mt-8 space-y-6") do |f| %>
+    <%= form_with(scope: :session, url: login_path, local: true, id: "login-form", class: "mt-8 space-y-6",
+                  html: { "tool-name" => "user-login",
+                          "tool-description" => "Authenticate user and create session. Redirects to dashboard on success." }) do |f| %>
       <div class="rounded-md shadow-sm -space-y-px">
         <div>
           <%= f.label :email, class: "sr-only" %>
@@ -35,7 +37,9 @@
               autocomplete: "email",
               required: true,
               class: "flex h-10 w-full rounded-t-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-              placeholder: "Email address" %>
+              placeholder: "Email address",
+              "tool-param-description" => "User's email address for authentication",
+              "tool-param-format" => "email" %>
         </div>
         <div>
           <%= f.label :password, class: "sr-only" %>
@@ -44,7 +48,10 @@
               autocomplete: "current-password",
               required: true,
               class: "flex h-10 w-full rounded-b-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-              placeholder: "Password" %>
+              placeholder: "Password",
+              "tool-param-description" => "User's password for authentication",
+              "tool-param-type" => "string",
+              "tool-param-min" => "1" %>
         </div>
       </div>
 

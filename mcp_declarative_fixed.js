@@ -1,5 +1,5 @@
 /**
- * Declarative MCP Tool Registration
+ * Declarative MCP Tool Registration - Fixed for Navigation
  * Automatically registers tools from HTML attributes
  */
 
@@ -21,11 +21,94 @@ class DeclarativeMCPRegistry {
     document.querySelectorAll('a[tool-name]').forEach(link => {
       this.registerLinkTool(link);
     });
+
+    // Register all buttons with tool-name (for logout button)
+    document.querySelectorAll('button[tool-name]').forEach(button => {
+      this.registerButtonTool(button);
+    });
+  }
+
+  registerButtonTool(button) {
+    const rawToolName = button.getAttribute('tool-name');
+    const toolName = rawToolName.replace(/[^a-zA-Z0-9_.-]/g, '_').substring(0, 64);
+    const toolDescription = button.getAttribute('tool-description') || '';
+
+    console.log(`Registering button tool: ${toolName}`);
+
+    window.mcp.registerTool(
+      toolName,
+      {
+        title: toolName.replace(/[_.-]/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
+        description: toolDescription,
+        inputSchema: {}
+      },
+      async () => {
+        return this.executeButtonTool(button);
+      }
+    );
+  }
+
+  async executeButtonTool(button) {
+    try {
+      // Find the parent form if this is a submit button
+      const form = button.closest('form');
+      if (form) {
+        // This is a form submission button (like logout)
+        const actionUrl = new URL(form.action, window.location.href);
+        actionUrl.searchParams.set("agent", "true");
+
+        const formData = new FormData(form);
+        const method = form.method?.toUpperCase() || 'POST';
+
+        const res = await fetch(actionUrl.toString(), {
+          method: method,
+          body: method === 'GET' ? undefined : formData,
+          headers: {
+            'X-MCP-Tool': 'true'
+          },
+          credentials: "same-origin"
+        });
+
+        const html = await res.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        const data = doc.getElementById("agent-response");
+        const json = data ? JSON.parse(data.textContent) : { success: true };
+
+        // Handle redirect
+        if (json.redirect_url) {
+          window.location.href = json.redirect_url;
+        }
+
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify(json, null, 2)
+          }]
+        };
+      } else {
+        // Regular button click
+        button.click();
+        return {
+          content: [{
+            type: "text",
+            text: JSON.stringify({ success: true, action: "button clicked" }, null, 2)
+          }]
+        };
+      }
+    } catch (error) {
+      return {
+        content: [{
+          type: "text",
+          text: `Error: ${error.message}`
+        }],
+        isError: true
+      };
+    }
   }
 
   registerFormTool(form) {
     const rawToolName = form.getAttribute('tool-name');
-    // Sanitize tool name to match MCP requirements
     const toolName = rawToolName.replace(/[^a-zA-Z0-9_.-]/g, '_').substring(0, 64);
     const toolDescription = form.getAttribute('tool-description') || '';
 
@@ -280,43 +363,64 @@ class DeclarativeMCPRegistry {
 
   async executeLinkTool(link) {
     try {
-      const url = new URL(link.href, window.location.href);
-      url.searchParams.set("agent", "true");
+      const toolName = link.getAttribute('tool-name');
 
-      const res = await fetch(url.toString(), {
-        headers: {
-          Accept: "text/html",
-          'X-MCP-Tool': 'true'
-        },
-        credentials: "same-origin"
-      });
+      // Check if this is a navigation link
+      if (toolName && toolName.includes('navigate')) {
+        // For navigation links, just navigate directly without agent parameter
+        console.log(`Navigating to: ${link.href}`);
 
-      const html = await res.text();
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, "text/html");
-      const data = doc.getElementById("agent-response");
-      const json = data ? JSON.parse(data.textContent) : {};
+        // Navigate to the page
+        window.location.href = link.href;
 
-      // Return result first
-      const result = {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(json, null, 2)
-          }
-        ]
-      };
+        // Return success message (this will be shown before navigation)
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({
+                success: true,
+                action: "navigating",
+                url: link.href
+              }, null, 2)
+            }
+          ]
+        };
+      } else {
+        // For action links (like delete), use the agent parameter
+        const url = new URL(link.href, window.location.href);
+        url.searchParams.set("agent", "true");
 
-      // Handle redirect after delay
-      setTimeout(() => {
+        const res = await fetch(url.toString(), {
+          headers: {
+            Accept: "text/html",
+            'X-MCP-Tool': 'true'
+          },
+          credentials: "same-origin"
+        });
+
+        const html = await res.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        const data = doc.getElementById("agent-response");
+        const json = data ? JSON.parse(data.textContent) : {};
+
+        // Handle redirect after getting response
         if (json.redirect_url) {
-          window.location.href = json.redirect_url;
-        } else {
-          window.location.reload();
+          setTimeout(() => {
+            window.location.href = json.redirect_url;
+          }, 100);
         }
-      }, 100);
 
-      return result;
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(json, null, 2)
+            }
+          ]
+        };
+      }
     } catch (error) {
       return {
         content: [
@@ -340,6 +444,8 @@ class DeclarativeMCPRegistry {
               this.registerFormTool(node);
             } else if (node.matches?.('a[tool-name]')) {
               this.registerLinkTool(node);
+            } else if (node.matches?.('button[tool-name]')) {
+              this.registerButtonTool(node);
             }
 
             // Check children
@@ -348,6 +454,9 @@ class DeclarativeMCPRegistry {
             });
             node.querySelectorAll?.('a[tool-name]').forEach(link => {
               this.registerLinkTool(link);
+            });
+            node.querySelectorAll?.('button[tool-name]').forEach(button => {
+              this.registerButtonTool(button);
             });
           }
         });
