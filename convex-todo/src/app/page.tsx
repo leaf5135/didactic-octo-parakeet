@@ -18,39 +18,51 @@ type Filter = 'all' | 'active' | 'completed';
 export default function Home() {
   const { user, signOut } = useAuth();
   const { isLoading, isAuthenticated } = useConvexAuth();
+
   if (isLoading) {
-  return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-      <div className="flex flex-col items-center space-y-4">
-        <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-        <p className="text-white text-lg font-medium">Loading...</p>
+    return (
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center relative overflow-hidden">
+        {/* Background blobs */}
+        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-purple-900 via-gray-900 to-blue-900 opacity-60"></div>
+        <div className="absolute -top-32 -left-32 w-96 h-96 bg-purple-700 opacity-30 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-blue-700 opacity-30 rounded-full blur-3xl animate-pulse"></div>
+
+        {/* Spinner */}
+        <div className="flex flex-col items-center space-y-4 z-10">
+          <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-white text-lg font-medium">Loading your todos...</p>
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   return (
-    <main className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center px-4 py-10">
-      <div className="w-full max-w-md">
+    <main className="relative min-h-screen text-white flex flex-col items-center justify-center px-4 py-10 overflow-hidden bg-gray-900">
+      {/* Glowing background gradient */}
+      <div className="absolute inset-0 -z-10 bg-gradient-to-br from-purple-900 via-gray-900 to-blue-900 opacity-60"></div>
+      <div className="absolute -top-32 -left-32 w-96 h-96 bg-purple-700 opacity-30 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-blue-700 opacity-30 rounded-full blur-3xl animate-pulse"></div>
+
+      <div className="w-full max-w-md z-10">
         <div className="flex flex-col items-center mb-6 space-y-4">
           <h1 className="text-3xl font-semibold text-white">Todo</h1>
           <div className="flex gap-4">
             {user && isAuthenticated ? (
               <button
                 onClick={() => signOut()}
-                className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition"
+                className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 hover:shadow-[0_0_10px_rgba(255,255,255,0.3)] transition"
               >
                 Sign out
               </button>
             ) : (
               <>
                 <Link href="/sign-in">
-                  <button className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition">
+                  <button className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 hover:shadow-[0_0_10px_rgba(255,255,255,0.2)] transition">
                     Sign in
                   </button>
                 </Link>
                 <Link href="/sign-up">
-                  <button className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition">
+                  <button className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 hover:shadow-[0_0_10px_rgba(255,255,255,0.2)] transition">
                     Sign up
                   </button>
                 </Link>
@@ -122,7 +134,7 @@ function TodoApp() {
         />
         <button
           type="submit"
-          className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition"
+          className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 hover:shadow-[0_0_10px_rgba(255,255,255,0.3)] transition"
         >
           Add
         </button>
@@ -133,11 +145,11 @@ function TodoApp() {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`capitalize px-2 py-1 rounded ${
+            className={`capitalize px-2 py-1 rounded transition ${
               f === filter
-                ? 'bg-white text-black'
+                ? 'bg-white text-black shadow-[0_0_10px_rgba(255,255,255,0.3)]'
                 : 'hover:text-white'
-            } transition`}
+            }`}
             {...mcp.tool(`filter-todos-${f}`, `Show ${f} todos in the list`)}
           >
             {f}
@@ -149,7 +161,7 @@ function TodoApp() {
         {filteredTodos.map((todo) => (
           <li
             key={todo._id}
-            className="flex items-center justify-between border border-gray-700 bg-gray-800 rounded px-4 py-2 group hover:bg-gray-700 transition"
+            className="flex items-center justify-between border border-gray-700 bg-gray-800 rounded px-4 py-2 group hover:bg-gray-700 hover:shadow-[0_0_12px_rgba(255,255,255,0.1)] transition"
           >
             <div
               className="flex items-center gap-2 cursor-pointer"
