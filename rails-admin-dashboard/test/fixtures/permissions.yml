@@ -1,0 +1,66 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+users_index:
+  resource: users
+  action: index
+  description: View all users
+
+users_show:
+  resource: users
+  action: show
+  description: View user details
+
+users_create:
+  resource: users
+  action: create
+  description: Create new users
+
+users_update:
+  resource: users
+  action: update
+  description: Edit users
+
+users_destroy:
+  resource: users
+  action: destroy
+  description: Delete users
+
+roles_index:
+  resource: roles
+  action: index
+  description: View all roles
+
+roles_show:
+  resource: roles
+  action: show
+  description: View role details
+
+roles_create:
+  resource: roles
+  action: create
+  description: Create new roles
+
+roles_update:
+  resource: roles
+  action: update
+  description: Edit roles
+
+roles_destroy:
+  resource: roles
+  action: destroy
+  description: Delete roles
+
+permissions_index:
+  resource: permissions
+  action: index
+  description: View all permissions
+
+permissions_show:
+  resource: permissions
+  action: show
+  description: View permission details
+
+dashboard_index:
+  resource: dashboard
+  action: index
+  description: Access dashboard

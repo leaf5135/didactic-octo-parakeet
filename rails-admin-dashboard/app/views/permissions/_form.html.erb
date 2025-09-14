@@ -1,0 +1,65 @@
+<%= form_with(model: permission, class: "space-y-6",
+              html: { "tool-name" => permission.new_record? ? "create-permission" : "update-permission-#{permission.id}",
+                      "tool-description" => permission.new_record? ? "Create a new permission for role-based access control. Redirects to permission details on success." : "Update permission #{permission.resource}:#{permission.action}. Redirects to updated permission page." }) do |form| %>
+  <% if permission.errors.any? %>
+    <div class="rounded-lg border border-red-200 bg-red-50 p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-700">
+            <%= pluralize(permission.errors.count, "error") %> prohibited this permission from being saved:
+          </h3>
+          <div class="mt-2 text-sm text-red-700">
+            <ul class="list-disc pl-5 space-y-1">
+              <% permission.errors.each do |error| %>
+                <li><%= error.full_message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="space-y-2">
+    <%= form.label :resource, class: "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" %>
+    <%= form.text_field :resource,
+        required: true,
+        class: "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        placeholder: "e.g., users, roles, permissions",
+        "tool-param-description" => "Resource name that this permission controls access to",
+        "tool-param-type" => "string",
+        "tool-param-min" => "2",
+        "tool-param-max" => "50",
+        "tool-param-pattern" => "^[a-z][a-z0-9_]*$" %>
+  </div>
+
+  <div class="space-y-2">
+    <%= form.label :action, class: "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" %>
+    <%= form.select :action,
+        options_for_select(['index', 'show', 'create', 'update', 'destroy'], permission.action),
+        { prompt: 'Select action type' },
+        required: true,
+        class: "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        "tool-param-description" => "Action type that can be performed on the resource",
+        "tool-param-enum" => "index,show,create,update,destroy" %>
+  </div>
+
+  <div class="space-y-2">
+    <%= form.label :description, class: "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" %>
+    <%= form.textarea :description,
+        class: "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        placeholder: "Describe what this permission allows",
+        "tool-param-description" => "Detailed description of what this permission allows",
+        "tool-param-type" => "string",
+        "tool-param-max" => "500" %>
+  </div>
+
+  <div>
+    <%= form.submit class: "inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" %>
+  </div>
+<% end %>

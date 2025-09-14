@@ -1,0 +1,47 @@
+<nav class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+  <div class="container flex h-14 items-center">
+    <div class="mr-4 hidden md:flex">
+      <a href="<%= dashboard_path %>" class="mr-6 flex items-center space-x-2">
+        <span class="hidden font-bold sm:inline-block">Admin Dashboard</span>
+      </a>
+      <nav class="flex items-center space-x-6 text-sm font-medium">
+        <%= link_to "Dashboard", dashboard_path,
+            class: current_page?(dashboard_path) ? "text-foreground transition-colors" : "text-foreground/60 transition-colors hover:text-foreground",
+            "tool-name" => "navigate-dashboard",
+            "tool-description" => "Navigate to dashboard overview. Shows system statistics and available actions." %>
+
+        <% if current_user.has_permission?('users', 'index') %>
+          <%= link_to "Users", users_path,
+              class: current_page?(users_path) ? "text-foreground transition-colors" : "text-foreground/60 transition-colors hover:text-foreground",
+              "tool-name" => "navigate-users",
+              "tool-description" => "Navigate to users list. Provides tools to create, edit, and delete users." %>
+        <% end %>
+
+        <% if current_user.has_permission?('roles', 'index') %>
+          <%= link_to "Roles", roles_path,
+              class: current_page?(roles_path) ? "text-foreground transition-colors" : "text-foreground/60 transition-colors hover:text-foreground",
+              "tool-name" => "navigate-roles",
+              "tool-description" => "Navigate to roles list. Provides tools to create, edit, and manage roles." %>
+        <% end %>
+
+        <% if current_user.has_permission?('permissions', 'index') %>
+          <%= link_to "Permissions", permissions_path,
+              class: current_page?(permissions_path) ? "text-foreground transition-colors" : "text-foreground/60 transition-colors hover:text-foreground",
+              "tool-name" => "navigate-permissions",
+              "tool-description" => "Navigate to permissions list. Provides tools to create and manage permissions." %>
+        <% end %>
+      </nav>
+    </div>
+    <div class="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+      <div class="flex items-center space-x-4">
+        <span class="text-sm text-muted-foreground">
+          <%= current_user.full_name %>
+        </span>
+        <%= button_to "Sign out", logout_path, method: :delete,
+            class: "inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3",
+            "tool-name" => "user-logout",
+            "tool-description" => "Sign out current user and destroy session. Redirects to login page." %>
+      </div>
+    </div>
+  </div>
+</nav>

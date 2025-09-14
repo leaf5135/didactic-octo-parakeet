@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+admin:
+  name: admin
+  description: Full system access
+
+manager:
+  name: manager
+  description: Can manage users and view reports
+
+viewer:
+  name: viewer
+  description: Read-only access
