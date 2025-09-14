@@ -1,7 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
-// Create a new todo for the authenticated user
+// Create a new todo
 export const createTodo = mutation({
   args: { text: v.string() },
   handler: async (ctx, args) => {
@@ -11,12 +11,12 @@ export const createTodo = mutation({
     await ctx.db.insert("todos", {
       text: args.text,
       completed: false,
-      userId: identity.subject, // Use subject as unique user identifier
+      userId: identity.subject,
     });
   },
 });
 
-// Get all todos for the authenticated user
+// Get all todos
 export const getTodos = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -29,7 +29,7 @@ export const getTodos = query({
   },
 });
 
-// Toggle the completed state of a todo (only if owned by the user)
+// Toggle the completed state of a todo
 export const toggleTodo = mutation({
   args: { id: v.id("todos") },
   handler: async (ctx, args) => {
