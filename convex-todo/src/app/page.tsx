@@ -1,17 +1,17 @@
 'use client';
 
-import { useState } from 'react';
-import { api } from '../../convex/_generated/api';
+import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import {
-  useQuery,
-  useMutation,
   Authenticated,
   Unauthenticated,
+  useConvexAuth,
+  useMutation,
+  useQuery,
 } from 'convex/react';
-import { useConvexAuth } from 'convex/react';
-import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import Link from 'next/link';
+import { useState } from 'react';
 import { mcp } from 'webmcp-attributes';
+import { api } from '../../convex/_generated/api';
 
 type Filter = 'all' | 'active' | 'completed';
 
@@ -91,15 +91,33 @@ function TodoApp() {
   const toggleTodo = useMutation(api.todo.toggleTodo);
   const deleteTodo = useMutation(api.todo.deleteTodo);
 
-  const [text, setText] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const text = formData.get('text') as string;
     const trimmed = text.trim();
     if (!trimmed) return;
     await createTodo({ text: trimmed });
-    setText('');
+    form.reset();
+  };
+
+  const handleToggle = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const id = formData.get('id') as string;
+    await toggleTodo({ id });
+  };
+
+  const handleDelete = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const id = formData.get('id') as string;
+    await deleteTodo({ id });
   };
 
   const filteredTodos = todos.filter((todo) => {
@@ -120,10 +138,11 @@ function TodoApp() {
           type="text"
           className="flex-1 border border-gray-600 bg-gray-800 text-white placeholder-gray-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-white transition"
           placeholder="Add a new task"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === 'Escape') setText('');
+            if (e.key === 'Escape') {
+              const form = e.currentTarget.form;
+              if (form) form.reset();
+            }
           }}
           {...mcp.param('The text content for the new todo item', {
             type: 'string',
@@ -163,35 +182,47 @@ function TodoApp() {
             key={todo._id}
             className="flex items-center justify-between border border-gray-700 bg-gray-800 rounded px-4 py-2 group hover:bg-gray-700 hover:shadow-[0_0_12px_rgba(255,255,255,0.1)] transition"
           >
-            <div
-              className="flex items-center gap-2 cursor-pointer"
-              onClick={() => toggleTodo({ id: todo._id })}
+            <form
+              onSubmit={handleToggle}
+              className="flex items-center gap-2 flex-1"
               {...mcp.tool('toggle-todo', 'Toggle completion status of a todo item')}
             >
-              <input
-                type="checkbox"
-                checked={todo.completed}
-                readOnly
-                className="form-checkbox h-4 w-4 text-white bg-gray-900 border-gray-600"
-              />
-              <span
-                className={`${
-                  todo.completed
-                    ? 'line-through text-gray-500'
-                    : 'text-white'
-                }`}
+              <input type="hidden" name="id" value={todo._id} />
+              <button
+                type="submit"
+                className="flex items-center gap-2 cursor-pointer"
               >
-                {todo.text}
-              </span>
-            </div>
+                <input
+                  type="checkbox"
+                  checked={todo.completed}
+                  readOnly
+                  className="form-checkbox h-4 w-4 text-white bg-gray-900 border-gray-600 pointer-events-none"
+                />
+                <span
+                  className={`${
+                    todo.completed
+                      ? 'line-through text-gray-500'
+                      : 'text-white'
+                  }`}
+                >
+                  {todo.text}
+                </span>
+              </button>
+            </form>
 
-            <button
-              onClick={() => deleteTodo({ id: todo._id })}
-              className="text-gray-400 hover:text-red-500 transition opacity-0 group-hover:opacity-100"
+            <form
+              onSubmit={handleDelete}
+              className="opacity-0 group-hover:opacity-100 transition"
               {...mcp.tool('delete-todo', 'Delete a specific todo item')}
             >
-              &times;
-            </button>
+              <input type="hidden" name="id" value={todo._id} />
+              <button
+                type="submit"
+                className="text-gray-400 hover:text-red-500 transition"
+              >
+                &times;
+              </button>
+            </form>
           </li>
         ))}
       </ul>
