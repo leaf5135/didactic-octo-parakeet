@@ -10,7 +10,6 @@ import {
 } from 'convex/react';
 import Link from 'next/link';
 import { useState } from 'react';
-import { mcp } from 'webmcp-attributes';
 import { api } from '../../convex/_generated/api';
 
 type Filter = 'all' | 'active' | 'completed';
@@ -108,7 +107,7 @@ function TodoApp() {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
-    const id = formData.get('id') as string;
+    const id = formData.get('id') as any;
     await toggleTodo({ id });
   };
 
@@ -116,7 +115,7 @@ function TodoApp() {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
-    const id = formData.get('id') as string;
+    const id = formData.get('id') as any;
     await deleteTodo({ id });
   };
 
@@ -131,25 +130,24 @@ function TodoApp() {
       <form
         onSubmit={handleAdd}
         className="flex gap-2 mb-6"
-        {...mcp.tool('add-todo', 'Add a new todo item to the list')}
+        tool-name="add-todo"
+        tool-description="Add a new todo item to the list"
       >
         <input
           name="text"
           type="text"
           className="flex-1 border border-gray-600 bg-gray-800 text-white placeholder-gray-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-white transition"
           placeholder="Add a new task"
+          required
+          tool-param-description="The text content for the new todo item"
+          tool-param-min="1"
+          tool-param-max="100"
           onKeyDown={(e) => {
             if (e.key === 'Escape') {
               const form = e.currentTarget.form;
               if (form) form.reset();
             }
           }}
-          {...mcp.param('The text content for the new todo item', {
-            type: 'string',
-            required: true,
-            min: 1,
-            max: 100,
-          })}
         />
         <button
           type="submit"
@@ -169,7 +167,8 @@ function TodoApp() {
                 ? 'bg-white text-black shadow-[0_0_10px_rgba(255,255,255,0.3)]'
                 : 'hover:text-white'
             }`}
-            {...mcp.tool(`filter-todos-${f}`, `Show ${f} todos in the list`)}
+            tool-name={`filter-todos-${f}`}
+            tool-description={`Show ${f} todos in the list`}
           >
             {f}
           </button>
@@ -185,9 +184,10 @@ function TodoApp() {
             <form
               onSubmit={handleToggle}
               className="flex items-center gap-2 flex-1"
-              {...mcp.tool('toggle-todo', 'Toggle completion status of a todo item')}
+              tool-name={`toggle-todo-${todo._id}`}
+              tool-description={`Toggle completion status of todo: ${todo.text}`}
             >
-              <input type="hidden" name="id" value={todo._id} />
+              <input type="hidden" name="id" value={todo._id} tool-param-description="The ID of the todo item to toggle" />
               <button
                 type="submit"
                 className="flex items-center gap-2 cursor-pointer"
@@ -213,9 +213,10 @@ function TodoApp() {
             <form
               onSubmit={handleDelete}
               className="opacity-0 group-hover:opacity-100 transition"
-              {...mcp.tool('delete-todo', 'Delete a specific todo item')}
+              tool-name={`delete-todo-${todo._id}`}
+              tool-description={`Delete todo: ${todo.text}`}
             >
-              <input type="hidden" name="id" value={todo._id} />
+              <input type="hidden" name="id" value={todo._id} tool-param-description="The ID of the todo item to delete" />
               <button
                 type="submit"
                 className="text-gray-400 hover:text-red-500 transition"
