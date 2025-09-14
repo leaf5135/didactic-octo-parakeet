@@ -1,12 +1,33 @@
-<% content_for :title, "Editing role" %>
+<div class="min-h-screen bg-background">
+  <%= render 'shared/navigation' %>
 
-<h1>Editing role</h1>
+  <main class="container mx-auto py-6 px-4 sm:px-6 lg:px-8">
+    <div class="px-4 sm:px-0">
+      <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+        <div class="px-6 py-5 border-b border-border">
+          <h3 class="text-lg font-semibold leading-6">Edit Role</h3>
+          <p class="mt-1 max-w-2xl text-sm text-muted-foreground">Update the role details below.</p>
+        </div>
 
-<%= render "form", role: @role %>
+        <div class="p-6">
+          <%= render "form", role: @role %>
+        </div>
 
-<br>
-
-<div>
-  <%= link_to "Show this role", @role %> |
-  <%= link_to "Back to roles", roles_path %>
+        <div class="bg-muted/50 px-6 py-4 flex justify-between">
+          <div>
+            <%= link_to "← Back to roles", roles_path,
+                class: "text-sm font-medium text-muted-foreground hover:text-foreground",
+                "tool-name" => "navigate-to-roles",
+                "tool-description" => "Navigate back to roles list" %>
+          </div>
+          <div>
+            <%= link_to "View role", @role,
+                class: "text-sm font-medium text-primary hover:text-primary/80",
+                "tool-name" => "navigate-to-role-#{@role.id}",
+                "tool-description" => "Navigate to view #{@role.name} role" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 </div>

@@ -13,25 +13,30 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :resource, style: "display: block" %>
+  <div class="space-y-2">
+    <%= form.label :resource, class: "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" %>
     <%= form.text_field :resource,
+        class: "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        placeholder: "e.g., users, roles",
         "tool-param-description" => "Resource name (e.g., users, roles)" %>
   </div>
 
-  <div>
-    <%= form.label :action, style: "display: block" %>
+  <div class="space-y-2">
+    <%= form.label :action, class: "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" %>
     <%= form.text_field :action,
+        class: "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        placeholder: "e.g., create, read, update, destroy",
         "tool-param-description" => "Action type (e.g., create, read, update, destroy)" %>
   </div>
 
-  <div>
-    <%= form.label :description, style: "display: block" %>
+  <div class="space-y-2">
+    <%= form.label :description, class: "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" %>
     <%= form.textarea :description,
+        class: "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
         "tool-param-description" => "Permission description" %>
   </div>
 
   <div>
-    <%= form.submit %>
+    <%= form.submit class: "inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50" %>
   </div>
 <% end %>

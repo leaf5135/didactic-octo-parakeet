@@ -1,22 +1,30 @@
-<div class="min-h-screen bg-gray-50">
+<div class="min-h-screen bg-background">
   <%= render 'shared/navigation' %>
 
-  <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+  <main class="container mx-auto py-6 px-4 sm:px-6 lg:px-8">
     <div class="px-4 sm:px-0">
-      <div class="md:grid md:grid-cols-3 md:gap-6">
-        <div class="md:col-span-1">
-          <div class="px-4 sm:px-0">
-            <h3 class="text-lg font-medium leading-6 text-gray-900">Edit User</h3>
-            <p class="mt-1 text-sm text-gray-600">
-              Update user information and account settings.
-            </p>
-          </div>
+      <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+        <div class="px-6 py-5 border-b border-border">
+          <h3 class="text-lg font-semibold leading-6">Edit User</h3>
+          <p class="mt-1 max-w-2xl text-sm text-muted-foreground">Update user information and account settings.</p>
         </div>
-        <div class="mt-5 md:mt-0 md:col-span-2">
-          <div class="shadow sm:rounded-md sm:overflow-hidden">
-            <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
-              <%= render "form", user: @user %>
-            </div>
+
+        <div class="p-6">
+          <%= render "form", user: @user %>
+        </div>
+
+        <div class="bg-muted/50 px-6 py-4 flex justify-between">
+          <div>
+            <%= link_to "← Back to users", users_path,
+                class: "text-sm font-medium text-muted-foreground hover:text-foreground",
+                "tool-name" => "navigate-to-users",
+                "tool-description" => "Navigate back to users list" %>
+          </div>
+          <div>
+            <%= link_to "View user", @user,
+                class: "text-sm font-medium text-primary hover:text-primary/80",
+                "tool-name" => "navigate-to-user-#{@user.id}",
+                "tool-description" => "Navigate to view #{@user.full_name}" %>
           </div>
         </div>
       </div>

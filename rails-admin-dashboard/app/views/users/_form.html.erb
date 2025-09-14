@@ -2,7 +2,7 @@
               html: { "tool-name" => user.new_record? ? "create-user" : "update-user-#{user.id}",
                       "tool-description" => user.new_record? ? "Create a new user" : "Update user #{user.full_name}" }) do |form| %>
   <% if user.errors.any? %>
-    <div class="rounded-md bg-red-50 p-4">
+    <div class="rounded-lg border border-red-200 bg-red-50 p-4">
       <div class="flex">
         <div class="flex-shrink-0">
           <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
@@ -10,7 +10,7 @@
           </svg>
         </div>
         <div class="ml-3">
-          <h3 class="text-sm font-medium text-red-800">
+          <h3 class="text-sm font-medium text-red-700">
             <%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:
           </h3>
           <div class="mt-2 text-sm text-red-700">
@@ -27,47 +27,47 @@
 
   <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
     <div class="sm:col-span-3">
-      <%= form.label :first_name, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.label :first_name, class: "block text-sm font-medium" %>
       <div class="mt-1">
         <%= form.text_field :first_name,
-            class: "shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md",
+            class: "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
             "tool-param-description" => "User's first name" %>
       </div>
     </div>
 
     <div class="sm:col-span-3">
-      <%= form.label :last_name, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.label :last_name, class: "block text-sm font-medium" %>
       <div class="mt-1">
         <%= form.text_field :last_name,
-            class: "shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md",
+            class: "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
             "tool-param-description" => "User's last name" %>
       </div>
     </div>
 
     <div class="sm:col-span-4">
-      <%= form.label :email, class: "block text-sm font-medium text-gray-700" %>
+      <%= form.label :email, class: "block text-sm font-medium" %>
       <div class="mt-1">
         <%= form.email_field :email,
-            class: "shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md",
+            class: "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
             "tool-param-description" => "User's email address" %>
       </div>
     </div>
 
     <% if user.new_record? %>
       <div class="sm:col-span-4">
-        <%= form.label :password, class: "block text-sm font-medium text-gray-700" %>
+        <%= form.label :password, class: "block text-sm font-medium" %>
         <div class="mt-1">
           <%= form.password_field :password,
-              class: "shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md",
+              class: "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
               "tool-param-description" => "User's password" %>
         </div>
       </div>
 
       <div class="sm:col-span-4">
-        <%= form.label :password_confirmation, class: "block text-sm font-medium text-gray-700" %>
+        <%= form.label :password_confirmation, class: "block text-sm font-medium" %>
         <div class="mt-1">
           <%= form.password_field :password_confirmation,
-              class: "shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md",
+              class: "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
               "tool-param-description" => "Password confirmation" %>
         </div>
       </div>
@@ -79,12 +79,12 @@
           <div class="relative flex items-start">
             <div class="flex items-center h-5">
               <%= form.check_box :active,
-                  class: "focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded",
-                  "tool-param-description" => "Whether user is active" %>
+                  class: "h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary",
+                  "tool-param-description" => "Set user account status (boolean: true = active, can sign in; false = inactive)" %>
             </div>
             <div class="ml-3 text-sm">
-              <%= form.label :active, "Active", class: "font-medium text-gray-700" %>
-              <p class="text-gray-500">User can sign in and access the system.</p>
+              <%= form.label :active, "Active", class: "font-medium" %>
+              <p class="text-muted-foreground">User can sign in and access the system.</p>
             </div>
           </div>
         </div>
@@ -95,8 +95,8 @@
   <div class="pt-5">
     <div class="flex justify-end">
       <%= link_to "Cancel", users_path,
-          class: "bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
-      <%= form.submit class: "ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+          class: "py-2 px-4 border border-input bg-background rounded-md shadow-sm text-sm font-medium hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" %>
+      <%= form.submit class: "ml-3 inline-flex justify-center py-2 px-4 rounded-md bg-primary text-sm font-medium text-primary-foreground shadow-sm hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" %>
     </div>
   </div>
 <% end %>

@@ -1,12 +1,52 @@
-<div id="<%= dom_id role %>">
-  <p>
-    <strong>Name:</strong>
-    <%= role.name %>
-  </p>
-
-  <p>
-    <strong>Description:</strong>
-    <%= role.description %>
-  </p>
-
+<div id="<%= dom_id role %>" class="border-t border-border">
+  <dl>
+    <div class="bg-muted/50 px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+      <dt class="text-sm font-medium text-muted-foreground">Name</dt>
+      <dd class="mt-1 text-sm sm:mt-0 sm:col-span-2">
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+          <%= role.name.capitalize %>
+        </span>
+      </dd>
+    </div>
+    <div class="bg-background px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+      <dt class="text-sm font-medium text-muted-foreground">Description</dt>
+      <dd class="mt-1 text-sm sm:mt-0 sm:col-span-2">
+        <%= role.description || "No description provided" %>
+      </dd>
+    </div>
+    <div class="bg-muted/50 px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+      <dt class="text-sm font-medium text-muted-foreground">Permissions</dt>
+      <dd class="mt-1 text-sm sm:mt-0 sm:col-span-2">
+        <div class="space-y-1">
+          <% role.permissions.each do |permission| %>
+            <div class="inline-flex items-center mr-2 mb-1">
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-500/10 text-yellow-700">
+                <%= permission.resource %>
+              </span>
+              <span class="mx-1 text-muted-foreground">:</span>
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-500/10 text-purple-700">
+                <%= permission.action %>
+              </span>
+            </div>
+          <% end %>
+          <% if role.permissions.empty? %>
+            <span class="text-muted-foreground">No permissions assigned</span>
+          <% end %>
+        </div>
+      </dd>
+    </div>
+    <div class="bg-background px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+      <dt class="text-sm font-medium text-muted-foreground">Users with this role</dt>
+      <dd class="mt-1 text-sm sm:mt-0 sm:col-span-2">
+        <% role.users.each do |user| %>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-500/10 text-blue-700 mr-2">
+            <%= user.full_name %>
+          </span>
+        <% end %>
+        <% if role.users.empty? %>
+          <span class="text-muted-foreground">No users assigned</span>
+        <% end %>
+      </dd>
+    </div>
+  </dl>
 </div>

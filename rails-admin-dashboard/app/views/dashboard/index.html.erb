@@ -1,18 +1,18 @@
-<div class="min-h-screen bg-gray-50">
+<div class="min-h-screen bg-background">
   <%= render 'shared/navigation' %>
 
   <!-- Main Content -->
-  <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+  <main class="container mx-auto py-6 px-4 sm:px-6 lg:px-8">
     <!-- Page header -->
     <div class="px-4 py-6 sm:px-0">
-      <div class="border-b border-gray-200 pb-5">
-        <h3 class="text-lg leading-6 font-medium text-gray-900">
+      <div class="border-b border-border pb-5">
+        <h3 class="text-2xl font-bold tracking-tight">
           Welcome back, <%= current_user.first_name %>!
         </h3>
-        <p class="mt-2 max-w-4xl text-sm text-gray-500">
+        <p class="mt-2 max-w-4xl text-sm text-muted-foreground">
           Your role:
           <% current_user.roles.each_with_index do |role, index| %>
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
               <%= role.name.capitalize %>
             </span>
             <%= ", " if index < current_user.roles.count - 1 %>
@@ -24,53 +24,53 @@
     <!-- Stats -->
     <div class="px-4 py-6 sm:px-0">
       <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-        <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
           <div class="px-4 py-5 sm:p-6">
-            <dt class="text-sm font-medium text-gray-500 truncate">
+            <dt class="text-sm font-medium text-muted-foreground truncate">
               Total Users
             </dt>
-            <dd class="mt-1 text-3xl font-semibold text-indigo-600">
+            <dd class="mt-1 text-3xl font-semibold text-primary">
               <%= @users_count %>
             </dd>
             <div class="mt-3">
               <%= link_to "Manage Users →", users_path,
-                  class: "text-sm font-medium text-indigo-600 hover:text-indigo-500",
-                  "tool-name" => "dashboard-view-users",
-                  "tool-description" => "Navigate to users management page" %>
+                  class: "text-sm font-medium text-primary hover:text-primary/80",
+                  "tool-name" => "navigate-to-users",
+                  "tool-description" => "Navigate to users page where you can view all users and access tools to add, edit, or delete users" %>
             </div>
           </div>
         </div>
 
-        <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
           <div class="px-4 py-5 sm:p-6">
-            <dt class="text-sm font-medium text-gray-500 truncate">
+            <dt class="text-sm font-medium text-muted-foreground truncate">
               Total Roles
             </dt>
-            <dd class="mt-1 text-3xl font-semibold text-green-600">
+            <dd class="mt-1 text-3xl font-semibold text-primary">
               <%= @roles_count %>
             </dd>
             <div class="mt-3">
               <%= link_to "Manage Roles →", roles_path,
-                  class: "text-sm font-medium text-green-600 hover:text-green-500",
-                  "tool-name" => "dashboard-view-roles",
-                  "tool-description" => "Navigate to roles management page" %>
+                  class: "text-sm font-medium text-primary hover:text-primary/80",
+                  "tool-name" => "navigate-to-roles",
+                  "tool-description" => "Navigate to roles page where you can view all roles and access tools to add, edit, or delete roles" %>
             </div>
           </div>
         </div>
 
-        <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
           <div class="px-4 py-5 sm:p-6">
-            <dt class="text-sm font-medium text-gray-500 truncate">
+            <dt class="text-sm font-medium text-muted-foreground truncate">
               Total Permissions
             </dt>
-            <dd class="mt-1 text-3xl font-semibold text-yellow-600">
+            <dd class="mt-1 text-3xl font-semibold text-primary">
               <%= @permissions_count %>
             </dd>
             <div class="mt-3">
               <%= link_to "Manage Permissions →", permissions_path,
-                  class: "text-sm font-medium text-yellow-600 hover:text-yellow-500",
-                  "tool-name" => "dashboard-view-permissions",
-                  "tool-description" => "Navigate to permissions management page" %>
+                  class: "text-sm font-medium text-primary hover:text-primary/80",
+                  "tool-name" => "navigate-to-permissions",
+                  "tool-description" => "Navigate to permissions page where you can view all permissions and access tools to add, edit, or delete permissions" %>
             </div>
           </div>
         </div>
@@ -79,15 +79,15 @@
 
     <!-- Quick Actions -->
     <div class="px-4 py-6 sm:px-0">
-      <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
         <div class="px-4 py-5 sm:p-6">
-          <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Quick Actions</h3>
+          <h3 class="text-lg font-semibold mb-4">Quick Actions</h3>
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <% if current_user.has_permission?('users', 'create') %>
               <%= link_to new_user_path,
-                  class: "inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500",
-                  "tool-name" => "dashboard-quick-add-user",
-                  "tool-description" => "Quick action to create new user" do %>
+                  class: "inline-flex items-center justify-center px-4 py-2 rounded-md bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 text-sm font-medium",
+                  "tool-name" => "navigate-to-add-user",
+                  "tool-description" => "Navigate to user creation form where you can access the create-user tool to add a new user" do %>
                 <svg class="mr-2 -ml-1 h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                 </svg>
@@ -97,9 +97,9 @@
 
             <% if current_user.has_permission?('roles', 'create') %>
               <%= link_to new_role_path,
-                  class: "inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500",
-                  "tool-name" => "dashboard-quick-add-role",
-                  "tool-description" => "Quick action to create new role" do %>
+                  class: "inline-flex items-center justify-center px-4 py-2 rounded-md bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 text-sm font-medium",
+                  "tool-name" => "navigate-to-add-role",
+                  "tool-description" => "Navigate to role creation form where you can access the create-role tool to add a new role" do %>
                 <svg class="mr-2 -ml-1 h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                 </svg>
@@ -109,9 +109,9 @@
 
             <% if current_user.has_permission?('permissions', 'create') %>
               <%= link_to new_permission_path,
-                  class: "inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500",
-                  "tool-name" => "dashboard-quick-add-permission",
-                  "tool-description" => "Quick action to create new permission" do %>
+                  class: "inline-flex items-center justify-center px-4 py-2 rounded-md bg-accent text-accent-foreground shadow-sm hover:bg-accent/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 text-sm font-medium",
+                  "tool-name" => "navigate-to-add-permission",
+                  "tool-description" => "Navigate to permission creation form where you can access the create-permission tool to add a new permission" do %>
                 <svg class="mr-2 -ml-1 h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
                 </svg>
@@ -125,10 +125,10 @@
 
     <!-- Recent Activity (placeholder) -->
     <div class="px-4 py-6 sm:px-0">
-      <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
         <div class="px-4 py-5 sm:p-6">
-          <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4">Recent Activity</h3>
-          <div class="text-sm text-gray-500">
+          <h3 class="text-lg font-semibold mb-4">Recent Activity</h3>
+          <div class="text-sm text-muted-foreground">
             <p>No recent activity to display.</p>
           </div>
         </div>

@@ -32,7 +32,7 @@ class RolesController < ApplicationController
     @role = Role.new(role_params)
 
     if @role.save
-      render_for_agent({ success: true, message: "Role created", role: { id: @role.id, name: @role.name } }) do
+      render_for_agent({ success: true, message: "Role created", role: { id: @role.id, name: @role.name }, redirect_url: role_url(@role) }) do
         redirect_to @role, notice: "Role was successfully created."
       end
     else
@@ -45,7 +45,7 @@ class RolesController < ApplicationController
   # PATCH/PUT /roles/1
   def update
     if @role.update(role_params)
-      render_for_agent({ success: true, message: "Role updated", role: { id: @role.id, name: @role.name } }) do
+      render_for_agent({ success: true, message: "Role updated", role: { id: @role.id, name: @role.name }, redirect_url: role_url(@role) }) do
         redirect_to @role, notice: "Role was successfully updated.", status: :see_other
       end
     else
@@ -58,7 +58,7 @@ class RolesController < ApplicationController
   # DELETE /roles/1
   def destroy
     @role.destroy!
-    render_for_agent({ success: true, message: "Role deleted" }) do
+    render_for_agent({ success: true, message: "Role deleted", redirect_url: roles_url }) do
       redirect_to roles_path, notice: "Role was successfully destroyed.", status: :see_other
     end
   end

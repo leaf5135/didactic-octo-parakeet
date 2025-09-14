@@ -32,7 +32,7 @@ class PermissionsController < ApplicationController
     @permission = Permission.new(permission_params)
 
     if @permission.save
-      render_for_agent({ success: true, message: "Permission created", permission: { id: @permission.id, resource: @permission.resource, action: @permission.action } }) do
+      render_for_agent({ success: true, message: "Permission created", permission: { id: @permission.id, resource: @permission.resource, action: @permission.action }, redirect_url: permission_url(@permission) }) do
         redirect_to @permission, notice: "Permission was successfully created."
       end
     else
@@ -45,7 +45,7 @@ class PermissionsController < ApplicationController
   # PATCH/PUT /permissions/1
   def update
     if @permission.update(permission_params)
-      render_for_agent({ success: true, message: "Permission updated", permission: { id: @permission.id, resource: @permission.resource, action: @permission.action } }) do
+      render_for_agent({ success: true, message: "Permission updated", permission: { id: @permission.id, resource: @permission.resource, action: @permission.action }, redirect_url: permission_url(@permission) }) do
         redirect_to @permission, notice: "Permission was successfully updated.", status: :see_other
       end
     else
@@ -58,7 +58,7 @@ class PermissionsController < ApplicationController
   # DELETE /permissions/1
   def destroy
     @permission.destroy!
-    render_for_agent({ success: true, message: "Permission deleted" }) do
+    render_for_agent({ success: true, message: "Permission deleted", redirect_url: permissions_url }) do
       redirect_to permissions_path, notice: "Permission was successfully destroyed.", status: :see_other
     end
   end

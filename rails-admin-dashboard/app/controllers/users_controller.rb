@@ -33,7 +33,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      render_for_agent({ success: true, message: "User created", user: { id: @user.id, email: @user.email } }) do
+      render_for_agent({ success: true, message: "User created", user: { id: @user.id, email: @user.email }, redirect_url: user_url(@user) }) do
         redirect_to @user, notice: "User was successfully created."
       end
     else
@@ -46,7 +46,7 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1
   def update
     if @user.update(user_params)
-      render_for_agent({ success: true, message: "User updated", user: { id: @user.id, email: @user.email } }) do
+      render_for_agent({ success: true, message: "User updated", user: { id: @user.id, email: @user.email }, redirect_url: user_url(@user) }) do
         redirect_to @user, notice: "User was successfully updated.", status: :see_other
       end
     else
@@ -59,7 +59,7 @@ class UsersController < ApplicationController
   # DELETE /users/1
   def destroy
     @user.destroy!
-    render_for_agent({ success: true, message: "User deleted" }) do
+    render_for_agent({ success: true, message: "User deleted", redirect_url: users_url }) do
       redirect_to users_path, notice: "User was successfully destroyed.", status: :see_other
     end
   end

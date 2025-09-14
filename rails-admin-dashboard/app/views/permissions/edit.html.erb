@@ -1,12 +1,33 @@
-<% content_for :title, "Editing permission" %>
+<div class="min-h-screen bg-background">
+  <%= render 'shared/navigation' %>
 
-<h1>Editing permission</h1>
+  <main class="container mx-auto py-6 px-4 sm:px-6 lg:px-8">
+    <div class="px-4 sm:px-0">
+      <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+        <div class="px-6 py-5 border-b border-border">
+          <h3 class="text-lg font-semibold leading-6">Edit Permission</h3>
+          <p class="mt-1 max-w-2xl text-sm text-muted-foreground">Update the permission details below.</p>
+        </div>
 
-<%= render "form", permission: @permission %>
+        <div class="p-6">
+          <%= render "form", permission: @permission %>
+        </div>
 
-<br>
-
-<div>
-  <%= link_to "Show this permission", @permission %> |
-  <%= link_to "Back to permissions", permissions_path %>
+        <div class="bg-muted/50 px-6 py-4 flex justify-between">
+          <div>
+            <%= link_to "← Back to permissions", permissions_path,
+                class: "text-sm font-medium text-muted-foreground hover:text-foreground",
+                "tool-name" => "navigate-to-permissions",
+                "tool-description" => "Navigate back to permissions list" %>
+          </div>
+          <div>
+            <%= link_to "View permission", @permission,
+                class: "text-sm font-medium text-primary hover:text-primary/80",
+                "tool-name" => "navigate-to-permission-#{@permission.id}",
+                "tool-description" => "Navigate to view #{@permission.resource}:#{@permission.action} permission" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 </div>
