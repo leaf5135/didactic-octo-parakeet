@@ -1,0 +1,12 @@
+<div class="flex items-start space-x-4">
+  <div class="flex-shrink-0">
+    <%# Add user avatar here if available %>
+  </div>
+  <div class="flex-1">
+    <div class="flex items-center space-x-2">
+      <span class="font-semibold"><%= message.user.first_name %></span>
+      <span class="text-xs text-muted-foreground"><%= time_ago_in_words(message.created_at) %> ago</span>
+    </div>
+    <p class="text-sm"><%= message.content %></p>
+  </div>
+</div>
