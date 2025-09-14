@@ -89,6 +89,7 @@ function TodoApp() {
   const createTodo = useMutation(api.todo.createTodo);
   const toggleTodo = useMutation(api.todo.toggleTodo);
   const deleteTodo = useMutation(api.todo.deleteTodo);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const [filter, setFilter] = useState<Filter>('all');
 
@@ -161,7 +162,7 @@ function TodoApp() {
         tool-name="todo.toggle"
         tool-description="Toggle a Todo by ID"
         onSubmit={handleToggle}
-        className="flex gap-2 mb-4"
+        className="hidden"
       >
         <input
           name="id"
@@ -185,7 +186,7 @@ function TodoApp() {
         tool-name="todo.delete"
         tool-description="Delete a Todo by ID"
         onSubmit={handleDelete}
-        className="flex gap-2 mb-6"
+        className="hidden"
       >
         <input
           name="id"
@@ -256,9 +257,22 @@ function TodoApp() {
                 >
                   {todo.text}
                 </span>
-                <span className="text-xs text-gray-500 mt-1">
-                  ID: {todo._id}
-                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(todo._id);
+                    setCopiedId(todo._id);
+                    setTimeout(() => setCopiedId(null), 1500); // Clear after 1.5s
+                  }}
+                  title="Click to copy ID"
+                  className={`text-xs mt-1 transition ${
+                    copiedId === todo._id
+                      ? 'text-green-400'
+                      : 'text-gray-400 hover:text-white underline underline-offset-2 decoration-dotted'
+                  }`}
+                >
+                  {copiedId === todo._id ? 'Copied!' : `ID: ${todo._id}`}
+                </button>
               </button>
             </form>
 
